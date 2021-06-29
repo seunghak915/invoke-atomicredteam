@@ -292,19 +292,19 @@ function Invoke-AtomicTest {
                         Write-KeyValue "Done executing test: " $testId
                     }
                     if ($session) {
-                        write-output (Invoke-Command -Session $session -scriptblock { (Get-Content $($Using:tmpDir + "art-out.txt")) -replace '\x00', ''; (Get-Content $($Using:tmpDir + "art-err.txt")) -replace '\x00', ''; if (-not $KeepStdOutStdErrFiles) { Remove-Item $($Using:tmpDir + "art-out.txt"), $($Using:tmpDir + "art-err.txt") -Force -ErrorAction Ignore } })
+                        write-output (Invoke-Command -Session $session -scriptblock { (Get-Content $($Using:tmpDir + "art-out-" + $TestNames + ".txt")) -replace '\x00', ''; (Get-Content $($Using:tmpDir + "art-err" + $TestNames + ".txt")) -replace '\x00', ''; if (-not $KeepStdOutStdErrFiles) { Remove-Item $($Using:tmpDir + "art-out" + $TestNames + ".txt"), $($Using:tmpDir + "art-err" + $TestNames + ".txt") -Force -ErrorAction Ignore } })
                     }
                     elseif (-not $interactive) {
                         # It is possible to have a null $session BUT also have stdout and stderr captured from 
                         #   the executed command. IF so then write the output to the pipe and cleanup the files.
-                        $stdoutFilename = $tmpDir + "art-out.txt"
+                        $stdoutFilename = $tmpDir + "art-out" + $TestNames + ".txt"
                         if (Test-Path $stdoutFilename -PathType leaf) { 
                             Write-Output ((Get-Content $stdoutFilename) -replace '\x00', '')
                             if (-not $KeepStdOutStdErrFiles) {
                                 Remove-Item $stdoutFilename
                             }
                         }
-                        $stderrFilename = $tmpDir + "art-err.txt"
+                        $stderrFilename = $tmpDir + "art-err" + $TestNames + ".txt"
                         if (Test-Path $stderrFilename -PathType leaf) { 
                             Write-Output ((Get-Content $stderrFilename) -replace '\x00', '')
                             if (-not $KeepStdOutStdErrFiles) { 
