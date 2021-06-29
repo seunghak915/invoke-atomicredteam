@@ -1,4 +1,4 @@
-function Invoke-ExecuteCommand ($finalCommand, $executor, $TimeoutSeconds, $session = $null, $interactive) {
+function Invoke-ExecuteCommand ($finalCommand, $executor, $TimeoutSeconds, $AtomicTechnique, $TestNumbers, $session = $null, $interactive) {
     $null = @(
         if ($null -eq $finalCommand) { return 0 }
         $finalCommand = $finalCommand.trim()
@@ -43,7 +43,9 @@ function Invoke-ExecuteCommand ($finalCommand, $executor, $TimeoutSeconds, $sess
             $fp2 = Join-Path $scriptParentPath "Invoke-KillProcessTree.ps1"
             invoke-command -Session $session -FilePath $fp
             invoke-command -Session $session -FilePath $fp2
-            $res = invoke-command -Session $session -ScriptBlock { Invoke-Process -filename $Using:execExe -Arguments $Using:arguments -TimeoutSeconds $Using:TimeoutSeconds -stdoutFile "art-out.txt" -stderrFile "art-err.txt"  }
+            $stdoutFile = "art-out-" + $AtomicTechnique + "-" + $TestNumbers + ".txt"
+            $stderrFile = "art-err-" + $AtomicTechnique + "-" + $TestNumbers + ".txt"
+            $res = invoke-command -Session $session -ScriptBlock { Invoke-Process -filename $Using:execExe -Arguments $Using:arguments -TimeoutSeconds $Using:TimeoutSeconds -stdoutFile $stdoutFile -stderrFile $stderrFile}
         }
         else {
             if ($interactive) {
