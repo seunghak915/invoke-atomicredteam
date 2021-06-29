@@ -101,9 +101,9 @@ function Install-AtomicRedTeam {
 
             if ($getRound4TestStep) {
                 Write-Verbose "Downloading Round4TestStep Powershell Script Files"
-                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$RepoOwner/invoke-atomicredteam/round4test/Round4TestStep.ps1" -OutFile $DownloadPath
-                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$RepoOwner/invoke-atomicredteam/round4test/Round4TestStep(admin).ps1" -OutFile $DownloadPath
-                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$RepoOwner/invoke-atomicredteam/round4test/Round4TestStep(manual).ps1" -OutFile $DownloadPath                
+                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$RepoOwner/atomic-red-team/round4test/round4test/Round4TestStep.ps1" -OutFile "$DownloadPath\Round4TestStep.ps1"
+                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$RepoOwner/atomic-red-team/round4test/round4test/Round4TestStep(admin).ps1" -OutFile "$DownloadPath\Round4TestStep(admin).ps1"
+                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$RepoOwner/atomic-red-team/round4test/round4test/Round4TestStep(manual).ps1" -OutFile "$DownloadPath\Round4TestStep(manual).ps1"
             }
 
             Write-Host "Installation of Invoke-AtomicRedTeam is complete. You can now use the Invoke-AtomicTest function" -Fore Yellow
