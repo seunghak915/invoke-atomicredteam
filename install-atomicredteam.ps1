@@ -51,7 +51,7 @@ function Install-AtomicRedTeam {
         [switch]$getAtomics = $False,
 
         [Parameter(Mandatory = $False, Position = 5)]
-        [switch]$getRound4TestStep = $False
+        [switch]$getRound4TestStep = $False,
 
         [Parameter(Mandatory = $False)]
         [switch]$Force = $False # delete the existing install directory and reinstall
