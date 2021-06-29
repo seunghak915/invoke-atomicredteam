@@ -260,7 +260,7 @@ function Invoke-AtomicTest {
                             $final_command_prereq = Merge-InputArgs $dep.prereq_command $test $InputArgs $PathToPayloads
                             if ($executor -ne "powershell") { $final_command_prereq = ($final_command_prereq.trim()).Replace("`n", " && ") }
                             $final_command_get_prereq = Merge-InputArgs $dep.get_prereq_command $test $InputArgs $PathToPayloads
-                            $res = Invoke-ExecuteCommand $final_command_prereq $executor $TimeoutSeconds $session -Interactive:$true $AtomicTechnique $TestNumbers
+                            $res = Invoke-ExecuteCommand $final_command_prereq $executor $TimeoutSeconds $AtomicTechnique $TestNumbers $session -Interactive:$true 
 
                             if ($res -eq 0) {
                                 Write-KeyValue "Prereq already met: " $description
