@@ -260,14 +260,14 @@ function Invoke-AtomicTest {
                             $final_command_prereq = Merge-InputArgs $dep.prereq_command $test $InputArgs $PathToPayloads
                             if ($executor -ne "powershell") { $final_command_prereq = ($final_command_prereq.trim()).Replace("`n", " && ") }
                             $final_command_get_prereq = Merge-InputArgs $dep.get_prereq_command $test $InputArgs $PathToPayloads
-                            $res = Invoke-ExecuteCommand $final_command_prereq $executor $TimeoutSeconds $session -Interactive:$true
+                            $res = Invoke-ExecuteCommand $final_command_prereq $executor $TimeoutSeconds $AtomicTechnique $TestNumbers $session -Interactive:$true 
 
                             if ($res -eq 0) {
                                 Write-KeyValue "Prereq already met: " $description
                             }
                             else {
-                                $res = Invoke-ExecuteCommand $final_command_get_prereq $executor $TimeoutSeconds $session -Interactive:$Interactive
-                                $res = Invoke-ExecuteCommand $final_command_prereq $executor $TimeoutSeconds $session -Interactive:$true
+                                $res = Invoke-ExecuteCommand $final_command_get_prereq $executor $TimeoutSeconds $AtomicTechnique $TestNumbers $session -Interactive:$Interactive
+                                $res = Invoke-ExecuteCommand $final_command_prereq $executor $TimeoutSeconds $AtomicTechnique $TestNumbers $session -Interactive:$true 
                                 if ($res -eq 0) {
                                     Write-KeyValue "Prereq successfully met: " $description
                                 }
@@ -279,32 +279,36 @@ function Invoke-AtomicTest {
                     }
                     elseif ($Cleanup) {
                         Write-KeyValue "Executing cleanup for test: " $testId
-                        $final_command = Merge-InputArgs $test.executor.cleanup_command $test $InputArgs $PathToPayloads
-                        $res = Invoke-ExecuteCommand $final_command $test.executor.name $TimeoutSeconds $session -Interactive:$Interactive
+                        $final_command = Merge-InputArgs $test.executor.cleanup_command $test $InputArgs $PathToPayloads 
+                        $res = Invoke-ExecuteCommand $final_command $test.executor.name $TimeoutSeconds $AtomicTechnique $TestNumbers $session -Interactive:$Interactive 
                         Write-KeyValue "Done executing cleanup for test: " $testId
                     }
                     else {
                         Write-KeyValue "Executing test: " $testId
                         $startTime = get-date
                         $final_command = Merge-InputArgs $test.executor.command $test $InputArgs $PathToPayloads
-                        $res = Invoke-ExecuteCommand $final_command $test.executor.name $TimeoutSeconds $session -Interactive:$Interactive
+                        $res = Invoke-ExecuteCommand $final_command $test.executor.name $TimeoutSeconds $AtomicTechnique $TestNumbers $session -Interactive:$Interactive 
                         Write-ExecutionLog $startTime $AT $testCount $test.name $ExecutionLogPath $executionHostname $executionUser $test.auto_generated_guid
                         Write-KeyValue "Done executing test: " $testId
                     }
                     if ($session) {
-                        write-output (Invoke-Command -Session $session -scriptblock { (Get-Content $($Using:tmpDir + "art-out.txt")) -replace '\x00', ''; (Get-Content $($Using:tmpDir + "art-err.txt")) -replace '\x00', ''; if (-not $KeepStdOutStdErrFiles) { Remove-Item $($Using:tmpDir + "art-out.txt"), $($Using:tmpDir + "art-err.txt") -Force -ErrorAction Ignore } })
+                        $stdoutFile = "art-out-" + $AtomicTechnique + "-" + $TestNumbers + ".txt"
+                        $stderrFile = "art-err-" + $AtomicTechnique + "-" + $TestNumbers + ".txt"
+                        write-output (Invoke-Command -Session $session -scriptblock { (Get-Content $($Using:tmpDir + $stdoutFile)) -replace '\x00', ''; (Get-Content $($Using:tmpDir + $stderrFile)) -replace '\x00', ''; if (-not $KeepStdOutStdErrFiles) { Remove-Item $($Using:tmpDir + $stdoutFile), $($Using:tmpDir + $stderrFile) -Force -ErrorAction Ignore } })
                     }
                     elseif (-not $interactive) {
+                        $stdoutFile = "art-out-" + $AtomicTechnique + "-" + $TestNumbers + ".txt"
+                        $stderrFile = "art-err-" + $AtomicTechnique + "-" + $TestNumbers + ".txt"
                         # It is possible to have a null $session BUT also have stdout and stderr captured from 
                         #   the executed command. IF so then write the output to the pipe and cleanup the files.
-                        $stdoutFilename = $tmpDir + "art-out.txt"
+                        $stdoutFilename = $tmpDir + $stdoutFile
                         if (Test-Path $stdoutFilename -PathType leaf) { 
                             Write-Output ((Get-Content $stdoutFilename) -replace '\x00', '')
                             if (-not $KeepStdOutStdErrFiles) {
                                 Remove-Item $stdoutFilename
                             }
                         }
-                        $stderrFilename = $tmpDir + "art-err.txt"
+                        $stderrFilename = $tmpDir + $stderrFile
                         if (Test-Path $stderrFilename -PathType leaf) { 
                             Write-Output ((Get-Content $stderrFilename) -replace '\x00', '')
                             if (-not $KeepStdOutStdErrFiles) { 
