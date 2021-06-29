@@ -50,6 +50,9 @@ function Install-AtomicRedTeam {
         [Parameter(Mandatory = $False, Position = 4)]
         [switch]$getAtomics = $False,
 
+        [Parameter(Mandatory = $False, Position = 5)]
+        [switch]$getRound4TestStep = $False
+
         [Parameter(Mandatory = $False)]
         [switch]$Force = $False # delete the existing install directory and reinstall
     )
@@ -94,6 +97,13 @@ function Install-AtomicRedTeam {
             if ($getAtomics) {
                 Write-Verbose "Installing Atomics Folder"
                 Invoke-Expression (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/$RepoOwner/invoke-atomicredteam/round4test/install-atomicsfolder.ps1"); Install-AtomicsFolder -InstallPath $InstallPath -DownloadPath $DownloadPath -Force:$Force -RepoOwner $RepoOwner
+            }
+
+            if ($getRound4TestStep) {
+                Write-Verbose "Downloading Round4TestStep Powershell Script Files"
+                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$RepoOwner/invoke-atomicredteam/round4test/Round4TestStep.ps1" -OutFile $DownloadPath
+                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$RepoOwner/invoke-atomicredteam/round4test/Round4TestStep(admin).ps1" -OutFile $DownloadPath
+                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$RepoOwner/invoke-atomicredteam/round4test/Round4TestStep(manual).ps1" -OutFile $DownloadPath                
             }
 
             Write-Host "Installation of Invoke-AtomicRedTeam is complete. You can now use the Invoke-AtomicTest function" -Fore Yellow
