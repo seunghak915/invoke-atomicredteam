@@ -36,7 +36,7 @@ function Install-AtomicRedTeam {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $False, Position = 0)]
-        [string]$InstallPath = $( if ($IsLinux -or $IsMacOS) { $Env:HOME + "/AtomicRedTeam" } else { $env:HOMEDRIVE + "\AtomicRedTeam" }),
+        [string]$InstallPath = $( if ($IsLinux -or $IsMacOS) { $Env:HOME + "/AtomicRedTeam" } else { "c:\round4test" }),
 
         [Parameter(Mandatory = $False, Position = 1)]
         [string]$DownloadPath = $InstallPath,
@@ -93,7 +93,7 @@ function Install-AtomicRedTeam {
 
             if ($getAtomics) {
                 Write-Verbose "Installing Atomics Folder"
-                Invoke-Expression (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/$RepoOwner/invoke-atomicredteam/master/install-atomicsfolder.ps1"); Install-AtomicsFolder -InstallPath $InstallPath -DownloadPath $DownloadPath -Force:$Force -RepoOwner $RepoOwner
+                Invoke-Expression (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/$RepoOwner/invoke-atomicredteam/round4test/install-atomicsfolder.ps1"); Install-AtomicsFolder -InstallPath $InstallPath -DownloadPath $DownloadPath -Force:$Force -RepoOwner $RepoOwner
             }
 
             Write-Host "Installation of Invoke-AtomicRedTeam is complete. You can now use the Invoke-AtomicTest function" -Fore Yellow
