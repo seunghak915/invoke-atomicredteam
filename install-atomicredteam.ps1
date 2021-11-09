@@ -96,7 +96,7 @@ function Install-AtomicRedTeam {
 
             if ($getAtomics) {
                 Write-Verbose "Installing Atomics Folder"
-                Invoke-Expression (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/$RepoOwner/invoke-atomicredteam/install-atomicsfolder.ps1"); Install-AtomicsFolder -InstallPath $InstallPath -DownloadPath $DownloadPath -Force:$Force -RepoOwner $RepoOwner
+                Invoke-Expression (New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/$RepoOwner/invoke-atomicredteam/round4test/install-atomicsfolder.ps1"); Install-AtomicsFolder -InstallPath $InstallPath -DownloadPath $DownloadPath -Force:$Force -RepoOwner $RepoOwner
             }
 
             if ($getRound4TestStep) {
