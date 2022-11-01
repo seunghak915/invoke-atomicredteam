@@ -34,7 +34,7 @@ function Install-AtomicsFolder {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $False, Position = 0)]
-        [string]$InstallPath = $( if ($IsLinux -or $IsMacOS) { $Env:HOME + "/AtomicRedTeam" } else { "c:\round4test" }),
+        [string]$InstallPath = $( if ($IsLinux -or $IsMacOS) { $Env:HOME + "/AtomicRedTeam" } else { "c:\round5test" }),
 
         [Parameter(Mandatory = $False, Position = 1)]
         [string]$DownloadPath = $InstallPath,
@@ -43,7 +43,7 @@ function Install-AtomicsFolder {
         [string]$RepoOwner = "crav3r",
 
         [Parameter(Mandatory = $False, Position = 3)]
-        [string]$Branch = "round4test",
+        [string]$Branch = "round5test",
 
         [Parameter(Mandatory = $False)]
         [switch]$Force = $False # delete the existing install directory and reinstall
